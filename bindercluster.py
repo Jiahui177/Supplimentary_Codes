@@ -112,10 +112,9 @@ def parse_args():
     g.add_argument("--z-sigma", "--sigma", "--tau", dest="z_sigma", type=float,
                    default=0.10,
                    help="stabiliser in robust centring: divide by sqrt(sd^2 + z_sigma^2)")
-    g.add_argument("--metric", default="cosine",
-                   choices=["cosine", "euclidean"])
-    g.add_argument("--linkage", default="average",
-                   choices=["average", "complete", "ward"])
+    g.add_argument("--metric", default="cosine-average",
+                   choices=["cosine-average", "euclidean-ward"],
+                  help="distance and likage, fixed as valid pairs")
     g.add_argument("--k-range", type=int, nargs=2, metavar=("KMIN", "KMAX"),
                    default=[2, 15], help="k values to sweep; produces the figures")
     g.add_argument("--k", type=int,
