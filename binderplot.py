@@ -51,7 +51,7 @@ def parse_args():
                         "(needs cluster_assignments.csv)")
     p.add_argument("--title", help="figure title, usually the target name")
     p.add_argument("--metric", default="cosine",
-                   choices=["cosine", "euclidean", "jaccard"],
+                   choices=["cosine", "euclidean"],
                    help="must match the bindercluster.py run")
     p.add_argument("--linkage", default="average",
                    choices=["average", "complete", "ward"],
@@ -82,8 +82,7 @@ def main():
     H = score.to_numpy(float)
     n, m = H.shape
 
-    D = (pdist((H > 0).astype(bool), metric="jaccard") if a.metric == "jaccard"
-         else pdist(H, metric=a.metric))
+    D = pdist(H, metric=a.metric)
     Z = linkage(np.nan_to_num(D, nan=1.0), method=a.linkage)
     order = dendrogram(Z, no_plot=True)["leaves"]
 
