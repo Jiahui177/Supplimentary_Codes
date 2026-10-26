@@ -12,10 +12,9 @@ directory. Nothing here is needed to interpret the analysis - cluster_assignment
 already states which design belongs to which cluster at every k.
 
 USAGE
-    python binderplot.py ./out_A7 ./figures --k 6 --title "AvrA7"
-
-    # minimum: just the heatmap and tree
-    python binderplot.py ./out_A7 ./figures
+    python '/The path where you store the script/binderplot.py'\
+    '/Where contains the score.csv and cluster_assignments.csv as the output of bindercluster.py/'\
+    '/Input the output path you want for figures here'
 
 INPUTS (inside the first argument, as written by bindercluster.py)
     score.csv                required, the matrix that was clustered
