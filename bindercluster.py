@@ -5,6 +5,14 @@ No structural superposition is required. Contact distances are measured inside
 each complex, so they are invariant to rigid-body placement, and the feature
 columns are target sites (heavy atoms, or residues), which are shared by construction.
 
+TYPICAL USE
+    # input and output can be positional; a .csv is read as a distance matrix,
+    # anything else as a directory of PDB files
+    python '/The path where you store the script/bindercluster.py'\
+    '/the folder you store pdb files/'\
+    '/Your output path'\
+    --title "Your job name"
+
 PIPELINE
     PDB complexes
       -> per target site, minimum distance to the binder          (--level)
@@ -25,18 +33,6 @@ OUTPUTS (written to --out)
     cluster_profiles.csv         per (k, cluster): size, mean score, top contacted sites
     target_conformation_qc.csv   per structure, mean RMSD of the target chain to all others
     skipped.csv                  structures that could not be used, with the reason
-
-TYPICAL USE
-    # input and output can be positional; a .csv is read as a distance matrix,
-    # anything else as a directory of PDB files
-    python bindercluster.py ./AllA7 ./out_A7 --title "AvrA7"
-
-    # re-run with different parameters, reusing the parsed distances (seconds)
-    python bindercluster.py ./out_A7/mindist.csv ./out_A7_w3 --soft-width 3
-
-    # once k is chosen: highlight it, or emit that partition only
-    python bindercluster.py ./out_A7/mindist.csv ./out_A7 --mark-k 6
-    python bindercluster.py ./out_A7/mindist.csv ./out_A7 --k 6
 
 READING THE DIAGNOSTICS
     d_eff_n        exp(Shannon entropy of cluster sizes) gained at this k. A large
@@ -221,10 +217,10 @@ def mindist_from_pdbs(pdb_dir, target_chain, binder_chain, level="atom"):
     return M, C, pd.DataFrame(skipped), pd.DataFrame(long)
 
 
-# --- 2. target conformation QC ---
+# --- 2. Quality control and find the mediod reference---
 
 def kabsch_rmsd(P, Q):
-    """RMSD after optimal superposition. Used for QC only; nothing is written out."""
+    """RMSD after optimal superposition. Used for QC only."""
     Pc, Qc = P - P.mean(axis=0), Q - Q.mean(axis=0)
     V, _, Wt = np.linalg.svd(Pc.T @ Qc)
     d = np.sign(np.linalg.det(V @ Wt))
@@ -302,7 +298,7 @@ def _graph(X, radius, kernel="box"):
 
 
 def smooth(H, coords, radius, alpha, kernel="box"):
-    """Smooth every row against one shared neighbourhood graph."""
+    """Smooth every row against one shared neighbourhood graph. Recommended."""
     X = coords[["x", "y", "z"]].to_numpy(float)
     A = _graph(X, radius, kernel)
     effective = 1.0 / (A ** 2).sum(axis=1)
