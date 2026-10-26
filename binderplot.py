@@ -50,11 +50,8 @@ def parse_args():
                    help="draw a cluster colour strip at this k "
                         "(needs cluster_assignments.csv)")
     p.add_argument("--title", help="figure title, usually the target name")
-    p.add_argument("--metric", default="cosine",
-                   choices=["cosine", "euclidean"],
-                   help="must match the bindercluster.py run")
-    p.add_argument("--linkage", default="average",
-                   choices=["average", "complete", "ward"],
+    p.add_argument("--metric", default="cosine-average",
+                   choices=["cosine-average", "euclidean-ward"],
                    help="must match the bindercluster.py run")
     p.add_argument("--no-tree", action="store_true",
                    help="drop the dendrogram; rows stay in tree order")
@@ -69,7 +66,9 @@ def parse_args():
                    help="write the design name on every row; only legible for small sets")
     p.add_argument("--tick-step", type=int, default=0,
                    help="label every Nth column; 0 picks a readable step automatically")
-    return p.parse_args()
+    a = p.parse_args()
+    a.metric, a.linkage = a.metric.split("-")
+    return a
 
 
 def main():
