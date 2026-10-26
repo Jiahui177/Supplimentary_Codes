@@ -113,7 +113,7 @@ def parse_args():
                    default=0.10,
                    help="stabiliser in robust centring: divide by sqrt(sd^2 + z_sigma^2)")
     g.add_argument("--metric", default="cosine",
-                   choices=["cosine", "euclidean", "jaccard"])
+                   choices=["cosine", "euclidean"])
     g.add_argument("--linkage", default="average",
                    choices=["average", "complete", "ward"])
     g.add_argument("--k-range", type=int, nargs=2, metavar=("KMIN", "KMAX"),
@@ -505,8 +505,7 @@ def diagnostics_plot(ks, d_eff, d_height, out, mark_k=None, title=None):
 def cluster(H, metric, linkage_method, k):
     from scipy.cluster.hierarchy import fcluster, linkage
     from scipy.spatial.distance import pdist
-    D = (pdist((H > 0).astype(bool), metric="jaccard") if metric == "jaccard"
-         else pdist(H, metric=metric))
+    D = pdist(H, metric=metric)
     D = np.nan_to_num(D, nan=1.0)
     Z = linkage(D, method=linkage_method)
     return fcluster(Z, k, "maxclust"), Z, D
@@ -518,8 +517,7 @@ def sweep_report(H, names, site_keys, metric, linkage_method, kmin, kmax, out,
     from scipy.cluster.hierarchy import dendrogram, fcluster, linkage
     from scipy.spatial.distance import pdist, squareform
 
-    D = np.nan_to_num(pdist((H > 0).astype(bool), metric="jaccard")
-                      if metric == "jaccard" else pdist(H, metric=metric), nan=1.0)
+    D = np.nan_to_num(pdist(H, metric=metric), nan=1.0)
     Dsq = squareform(D)
     Z = linkage(D, method=linkage_method)
     n = H.shape[0]
