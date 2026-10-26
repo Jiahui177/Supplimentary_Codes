@@ -87,7 +87,7 @@ def parse_args():
     g.add_argument("--binary", action="store_true",
                    help="hard 0/1 threshold instead of the ramp")
     g.add_argument("--min-freq", type=float, default=0.0,
-                   help="drop residues whose mean score is below this")
+                   help="drop atom whose mean score is below this")
 
     g = p.add_argument_group("spatial smoothing")
     g.add_argument("--smooth-radius", type=float, default=3.5,
