@@ -134,7 +134,7 @@ def parse_args():
         p.error("give exactly one input: a PDB directory or a mindist.csv")
     if not a.out:
         p.error("give an output directory (second positional argument or --out)")
-    a.metric, a.linkage = a.method.split("-")
+    a.metric, a.linkage = a.metric.split("-")
     return a
 
 
