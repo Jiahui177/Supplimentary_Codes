@@ -88,13 +88,18 @@ def main():
 
     labels = None
     if a.k:
-        path = indir / "cluster_assignments.csv"
-        if not path.exists():
-            raise SystemExit(f"--k needs {path}")
-        assign = pd.read_csv(path).set_index("pdb_file")
-        if f"k{a.k}" not in assign.columns:
-            raise SystemExit(f"k={a.k} is not in {path.name}")
-        labels = assign.loc[score.index, f"k{a.k}"].to_numpy()
+        single = indir / f"clusters_k{a.k}.csv"
+        sweep = indir / "cluster_assignments.csv"
+        if single.exists():
+            assign = pd.read_csv(single).set_index("pdb_file")
+            labels = assign.loc[score.index, "cluster"].to_numpy()
+        elif sweep.exists():
+            assign = pd.read_csv(sweep).set_index("pdb_file")
+            if f"k{a.k}" not in assign.columns:
+                raise SystemExit(f"k={a.k} is not in {sweep.name}")
+            labels = assign.loc[score.index, f"k{a.k}"].to_numpy()
+        else:
+            raise SystemExit(f"--k needs {single.name} or {sweep.name}")
 
     # layout: dendrogram | cluster strip | heatmap | colourbar
     widths = [0.0 if a.no_tree else 1.6,
