@@ -1,4 +1,4 @@
-# Nanopore suquencing result quailty control
+# Nanopore suquencing result quailty control -Section 2.3.3
 This folder contains the scripts mentioned in Section 2.3.3 -Yeast library screening and nanopore sequencing-based binder identification.
 QC.py filters Oxford Nanopore FASTQ reads by length and (optionally) by mean quality before alignment to the binder reference sequences.
 ## Filtering used in this thesis:
