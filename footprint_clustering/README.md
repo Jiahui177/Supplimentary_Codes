@@ -23,7 +23,7 @@ The defult analysis following the thesis settings:
   - Gaussian smoothing with σ = 3.5 Å and α = 0.5, 
   - cosine distance with average linkage
 
-Advance setting:
+Advance setting: 
 Run
 ```
 python bindercluster.py --help
