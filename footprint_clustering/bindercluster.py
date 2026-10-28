@@ -105,10 +105,9 @@ def parse_args():
                    help="which structure supplies the shared neighbourhood graph")
 
     g = p.add_argument_group("centring and clustering")
-    g.add_argument("--z", nargs="?", const="robust", default="none",
-                   choices=["none", "standard", "robust"],
-                   help="centre each residue column to suppress consensus positions; "
-                        "bare --z means robust")
+    g.add_argument("--z", action="store_true",
+                   help="centre each site column to suppress consensus positions "
+                        "(robust scaling); off by default")
     g.add_argument("--z-sigma", "--sigma", "--tau", dest="z_sigma", type=float,
                    default=0.10,
                    help="stabiliser in robust centring: divide by sqrt(sd^2 + z_sigma^2)")
@@ -329,14 +328,12 @@ def smooth_per_complex(H, names, site_keys, coords_long, radius, alpha,
     return out
 
 
-def standardize(H, how, sigma):
-    """Centre each residue column, optionally with a variance stabiliser."""
-    if how == "none":
+def standardize(H, on, sigma):
+    """Robustly centre each site column (variance-stabilised)."""
+    if not on:
         return H
     mean = H.mean(axis=0, keepdims=True)
     sd = H.std(axis=0, keepdims=True)
-    if how == "standard":
-        return (H - mean) / np.where(sd == 0, 1.0, sd)
     return (H - mean) / np.sqrt(sd ** 2 + sigma ** 2)
 
 
@@ -659,9 +656,9 @@ def main():
                 sys.exit("--smooth-radius needs coords.csv")
             H = smooth(H, C, a.smooth_radius, a.alpha, a.smooth_kernel)
 
-    if a.z != "none":
-        print(f"centring: {a.z}" + (f" (z_sigma={a.z_sigma})" if a.z == "robust" else "")
-              + "; comparison is now of deviations from the per-residue mean")
+    if a.z:
+        print(f"centring: robust (z_sigma={a.z_sigma}); "
+              "comparison is now of deviations from the per-site mean")
     H = standardize(H, a.z, a.z_sigma)
 
     names = scores.index.to_list()
