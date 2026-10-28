@@ -24,6 +24,7 @@ The defult analysis following the thesis settings:
   - cosine distance with average linkage
 
 Advance setting: 
+
 Run
 ```
 python bindercluster.py --help
