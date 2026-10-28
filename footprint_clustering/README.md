@@ -12,6 +12,7 @@ pip install numpy pandas scipy biopython matplotlib
 You need prepare a directory of complex PDB files, one per design, each containing the target chain (default A) and the binder chain (default B). The protein sequences of target must be identical.
 ### 2. Scoring, clustering and generate diagnostic diagrams:
 Use bindercluster.py to conduct the target-binder contact footprint analysis
+
 Defult: 
 ```
 python bindercluster.py /path to complex_pdbs/ /path to output/ --title "title"
@@ -21,6 +22,7 @@ The defult analysis following the thesis settings:
   - c = 4.5 Å, ω = 1.5 Å, 
   - Gaussian smoothing with σ = 3.5 Å and α = 0.5, 
   - cosine distance with average linkage
+
 Advance setting:
 Run
 ```
